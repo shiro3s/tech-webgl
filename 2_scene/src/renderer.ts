@@ -2,10 +2,11 @@ import {
   WebGLRenderer,
   Color,
   Scene,
-  Mesh,
-  SphereGeometry,
   PerspectiveCamera,
+  Mesh,
   MeshBasicMaterial,
+  BoxGeometry,
+  PlaneGeometry,
 } from 'three';
 import Stats from 'stats.js';
 import { Control } from './dat.gui';
@@ -39,8 +40,8 @@ interface RenderArgs {
   renderer: WebGLRenderer;
   scene: Scene;
   camera: PerspectiveCamera;
-  sphere: Mesh<SphereGeometry, MeshBasicMaterial>;
   controls: Control;
+  plane: Mesh<PlaneGeometry, MeshBasicMaterial>;
 }
 
 export const renderScene = ({
@@ -48,24 +49,28 @@ export const renderScene = ({
   camera,
   scene,
   stats,
-  sphere,
   controls,
+  plane,
 }: RenderArgs) => {
-  let step = 0;
-
-  const renderAnimation = () => {
+  // let step = 0;
+  const render = () => {
     stats.update();
 
-    step += controls.bouncingSpeed;
+    scene.traverse((e) => {
+      if (e instanceof Mesh && e !== plane) {
+        if (e instanceof Mesh<BoxGeometry, MeshBasicMaterial>) {
+          e.rotation.x += controls.rotationSpeed;
+          e.rotation.y += controls.rotationSpeed;
+          e.rotation.z += controls.rotationSpeed;
+        }
+      }
+    });
 
-    sphere.position.x = 20 + 10 * Math.cos(step);
-    sphere.position.y = 2 + 10 * Math.abs(Math.sin(step));
-
-    requestAnimationFrame(renderAnimation);
+    requestAnimationFrame(render);
     renderer.render(scene, camera);
   };
 
   return {
-    renderAnimation,
+    render,
   };
 };

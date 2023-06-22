@@ -6,6 +6,7 @@ import {
   PlaneGeometry,
   SphereGeometry,
   SpotLight,
+  AmbientLight,
 } from 'three';
 
 export const createCamera = () => {
@@ -16,9 +17,9 @@ export const createCamera = () => {
     1000
   );
   // position and point the camera to the center of the scene
-  camera.position.x = -20;
+  camera.position.x = -30;
   camera.position.y = 40;
-  camera.position.z = 20;
+  camera.position.z = 30;
 
   return { camera };
 };
@@ -40,12 +41,13 @@ export const createCube = () => {
 };
 
 export const createPlane = () => {
-  const planeGeometry = new PlaneGeometry(60, 20);
+  const planeGeometry = new PlaneGeometry(60, 40, 1, 1);
   const planeMaterial = new MeshBasicMaterial({ color: 0xcccccc });
   const plane = new Mesh(planeGeometry, planeMaterial);
+  plane.receiveShadow = true;
 
   plane.rotation.x = -0.5 * Math.PI;
-  plane.position.x = 15;
+  plane.position.x = 0;
   plane.position.y = 0;
   plane.position.z = 0;
 
@@ -68,9 +70,14 @@ export const createSphere = () => {
 };
 
 export const createSpotLight = () => {
-  const spotLight = new SpotLight(0xfff);
+  const spotLight = new SpotLight(0xffffff);
   spotLight.position.set(-40, 60, -10);
   spotLight.castShadow = true;
 
   return { spotLight };
+};
+
+export const createAmbientLight = () => {
+  const ambientLight = new AmbientLight();
+  return { ambientLight };
 };

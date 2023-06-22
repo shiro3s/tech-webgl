@@ -5,16 +5,17 @@ import { initStats } from './stats';
 import { guiControl } from './dat.gui';
 import {
   createCamera,
-  createCube,
   createPlane,
-  createSphere,
   createSpotLight,
+  createAmbientLight,
 } from './materials';
 
 export const initWebGL = () => {
   const { stats } = initStats();
   const scene = new Scene();
+
   const { camera } = createCamera();
+  scene.add(camera);
 
   camera.lookAt(scene.position);
 
@@ -23,17 +24,14 @@ export const initWebGL = () => {
   const canvas = document.getElementById('canvas');
 
   // x, y, z軸を表示
-  const axes = new AxesHelper(20);
+  const axes = new AxesHelper(50);
   scene.add(axes);
 
   const { plane } = createPlane();
   scene.add(plane);
 
-  const { cube } = createCube();
-  scene.add(cube);
-
-  const { sphere } = createSphere();
-  scene.add(sphere);
+  const { ambientLight } = createAmbientLight();
+  scene.add(ambientLight);
 
   const { spotLight } = createSpotLight();
   scene.add(spotLight);
@@ -41,20 +39,20 @@ export const initWebGL = () => {
   if (!canvas) return;
   canvas.appendChild(renderer.domElement);
 
-  const { controls } = guiControl();
+  const { controls } = guiControl({ scene, plane });
 
-  const { renderAnimation } = renderScene({
+  const { render } = renderScene({
     renderer,
     camera,
     scene,
     stats,
-    sphere,
     controls,
+    plane,
   });
 
   return {
     camera,
     renderer,
-    renderAnimation,
+    render,
   };
 };

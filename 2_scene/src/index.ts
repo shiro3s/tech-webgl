@@ -6,6 +6,6 @@ const init = initWebGL();
 if (init) {
   const { resize } = resizeRenderer({ ...init });
 
-  window.onload = init.renderAnimation;
+  window.onload = init.render;
   window.addEventListener('resize', resize, false);
 }
