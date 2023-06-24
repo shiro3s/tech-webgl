@@ -1,14 +1,14 @@
-import { Scene, AxesHelper, Fog } from 'three';
+import { Scene, AxesHelper, Fog, Vector3 } from 'three';
 
 import { createRenderer, renderScene } from './renderer';
 import { initStats } from './stats';
-import { guiControl } from './dat.gui';
 import {
   createCamera,
   createPlane,
   createSpotLight,
   createAmbientLight,
 } from './materials';
+import { addGeometries } from './addGeometries';
 
 export const initWebGL = () => {
   const { stats } = initStats();
@@ -20,7 +20,7 @@ export const initWebGL = () => {
   const { camera } = createCamera();
   scene.add(camera);
 
-  camera.lookAt(scene.position);
+  camera.lookAt(new Vector3(-10, 0, 0));
 
   const { renderer } = createRenderer();
 
@@ -42,15 +42,13 @@ export const initWebGL = () => {
   if (!canvas) return;
   canvas.appendChild(renderer.domElement);
 
-  const { controls } = guiControl({ scene, plane });
+  addGeometries(scene);
 
   const { render } = renderScene({
     renderer,
     camera,
     scene,
     stats,
-    controls,
-    plane,
   });
 
   return {
