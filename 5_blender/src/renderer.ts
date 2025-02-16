@@ -3,13 +3,9 @@ import {
 	Color,
 	type Scene,
 	type PerspectiveCamera,
-	Mesh,
-	type MeshBasicMaterial,
-	type BoxGeometry,
-	type PlaneGeometry,
 } from "three";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import type Stats from "stats.js";
-import type { Control } from "./dat.gui";
 
 export const createRenderer = () => {
 	const renderer = new WebGLRenderer();
@@ -40,29 +36,15 @@ interface RenderArgs {
 	renderer: WebGLRenderer;
 	scene: Scene;
 	camera: PerspectiveCamera;
-	controls: Control;
-	plane: Mesh<PlaneGeometry, MeshBasicMaterial>;
 }
 
-export const renderScene = ({
-	renderer,
-	camera,
-	scene,
-	stats,
-	controls,
-	plane,
-}: RenderArgs) => {
-	// let step = 0;
+export const renderScene = ({ renderer, camera, scene, stats }: RenderArgs) => {
+	const controls = new OrbitControls(camera, renderer.domElement);
+	controls.target.set(0, 0, 0);
+	controls.update();
+
 	const render = () => {
 		stats.update();
-
-		scene.traverse((e) => {
-			if (e instanceof Mesh && e !== plane) {
-				e.rotation.x += controls.rotationSpeed;
-				e.rotation.y += controls.rotationSpeed;
-				e.rotation.z += controls.rotationSpeed;
-			}
-		});
 
 		requestAnimationFrame(render);
 		renderer.render(scene, camera);

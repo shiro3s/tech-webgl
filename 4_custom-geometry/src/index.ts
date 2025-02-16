@@ -1,11 +1,11 @@
-import { initWebGL } from './initWebGL';
-import { resizeRenderer } from './renderer';
+import { initWebGL } from "./initWebGL";
+import { resizeRenderer } from "./renderer";
 
 const init = initWebGL();
 
 if (init) {
-  const { resize } = resizeRenderer({ ...init });
+	const { resize } = resizeRenderer({ ...init });
 
-  window.onload = init.render;
-  window.addEventListener('resize', resize, false);
+	window.onload = init.render;
+	window.addEventListener("resize", resize, false);
 }

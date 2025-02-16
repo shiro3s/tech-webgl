@@ -1,12 +1,12 @@
-import Stats from 'stats.js';
+import Stats from "stats.js";
 
 export const initStats = () => {
-  const stats = new Stats();
-  stats.showPanel(0);
+	const stats = new Stats();
+	stats.showPanel(0);
 
-  document.body.appendChild(stats.dom);
+	document.body.appendChild(stats.dom);
 
-  return {
-    stats,
-  };
+	return {
+		stats,
+	};
 };
