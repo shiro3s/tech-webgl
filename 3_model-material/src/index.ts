@@ -65,8 +65,13 @@ assetLoader.load(
 	modelUrl.href,
 	(gltf) => {
 		const model = gltf.scene;
-		model.castShadow = true
 		scene.add(model);
+
+		model.traverse((node) => {
+			if (node instanceof THREE.Mesh && node.isMesh) {
+				node.castShadow = true
+			}
+		})
 
 		gui.addColor(options, "Main").onChange((e) => {
 			const m = model.getObjectByName("Cube");
