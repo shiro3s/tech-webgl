@@ -1,8 +1,11 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import {EXRLoader} from "three/examples/jsm/loaders/EXRLoader"
+import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader";
 
-const exrTextureURL = new URL("./sunset_puresky.exr", import.meta.url)
+const exrTextureURL = new URL(
+	"./kloofendal_48d_partly_cloudy_puresky_4k.hdr",
+	import.meta.url,
+);
 
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.shadowMap.enabled = true;
@@ -26,13 +29,13 @@ const orbit = new OrbitControls(camera, renderer.domElement);
 camera.position.set(-10, 30, 30);
 orbit.update();
 
-renderer.toneMapping = THREE.ACESFilmicToneMapping
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.8;
 
-const loader = new EXRLoader()
+const loader = new RGBELoader();
 loader.load(exrTextureURL.href, (texture) => {
 	texture.mapping = THREE.EquirectangularReflectionMapping;
-	scene.background = texture
+	scene.background = texture;
 	scene.environment = texture;
 
 	const sphere = new THREE.Mesh(
@@ -41,12 +44,12 @@ loader.load(exrTextureURL.href, (texture) => {
 			roughness: 0,
 			metalness: 0,
 			transmission: 1,
-			ior: 2.33
-		})
-	)
+			ior: 2.33,
+		}),
+	);
 
-	scene.add(sphere)
-})
+	scene.add(sphere);
+});
 
 // const gridHelper = new THREE.GridHelper(30);
 // scene.add(gridHelper);
