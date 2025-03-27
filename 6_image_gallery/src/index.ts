@@ -1,6 +1,11 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import gsap from "gsap"
+import {ScrollTrigger} from "gsap/ScrollTrigger"
 
+gsap.registerPlugin(ScrollTrigger)
+
+const tl = gsap.timeline()
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.shadowMap.enabled = true;
 
@@ -25,11 +30,13 @@ const orbit = new OrbitControls(camera, renderer.domElement);
 const axesHelper = new THREE.AxesHelper(50);
 scene.add(axesHelper);
 
-camera.position.set(-5, 30, 25);
-camera.scale.set(0.3, 0.5, 1.5);
+camera.position.set(0, 0, 30);
+camera.position.z = 30;
+camera.lookAt(0, 0, 0)
 orbit.update();
 
 const gridHelper = new THREE.GridHelper(20, 20);
+gridHelper.rotation.x = THREE.MathUtils.degToRad(90)
 scene.add(gridHelper);
 
 const ambientLight = new THREE.AmbientLight(0x333333);
@@ -40,26 +47,28 @@ scene.add(directionalLight);
 directionalLight.position.set(-30, 30, 0);
 directionalLight.castShadow = true;
 
+
+const imageGroupMesh = new THREE.Group()
+imageGroupMesh.name = "imageGroup"
+
 for (let i = 0; i < 49; i++) {
 	new THREE.TextureLoader().load(`/img/${i + 1}.jpg`, (texture) => {
 		const planeMesh = new THREE.Mesh(
-			new THREE.PlaneGeometry(4, 4),
+			new THREE.PlaneGeometry(5, 5),
 			new THREE.MeshBasicMaterial({map: texture})
 		)
 
-		planeMesh.rotateX(-Math.PI / 2)
+		planeMesh.position.x = ((i % 7) * 6) - 18
+		planeMesh.position.y = (-(Math.floor(i / 7) % 7) * 6) + 18
 
-		planeMesh.position.x = ((i % 7) * 5) - 5
-		planeMesh.position.z = (-(Math.floor(i / 7) % 7) * 5) + 5
-
-		scene.add(planeMesh)
+		imageGroupMesh.add(planeMesh)
 	}, undefined, (error) => {
 		console.log(error)
 	})
 }
 
+scene.add(imageGroupMesh)
 
-console.log(scene.children)
 
 const dLightHelper = new THREE.DirectionalLightHelper(directionalLight, 5);
 scene.add(dLightHelper);
@@ -69,6 +78,8 @@ const dLightShadowHelper = new THREE.CameraHelper(
 );
 scene.add(dLightShadowHelper);
 
+// const animationImage = () => {
+// }
 
 const animate = (time: number) => {
 	renderer.render(scene, camera);
@@ -82,3 +93,5 @@ const handleResize = () => {
 	renderer.setSize(window.innerWidth, window.innerHeight);
 };
 window.addEventListener("resize", handleResize);
+
+// window.addEventListener("mousedown", animationImage)
